@@ -1,14 +1,24 @@
 import React from 'react';
 
-const Button = ({ className = '', children, ...props }) => {
+const baseClasses = "font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors";
+const variants = {
+  primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+  secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
+  danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+  link: "text-blue-600 hover:text-blue-800 hover:underline p-0 h-auto",
+};
+
+const sizes = {
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-sm",
+  lg: "px-6 py-3 text-base",
+};
+
+export const Button = ({ children, className = '', variant = 'primary', size = 'md', ...props }) => {
+  const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;
   return (
-    <button
-      className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
-      {...props}
-    >
+    <button className={classes} {...props}>
       {children}
     </button>
   );
 };
-
-export { Button };

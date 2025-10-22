@@ -1,30 +1,27 @@
-// src/server.js
+// backend/src/server.js
+
 import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database.js';
+import authRoutes from './features/auth/auth.routes.js';
+import projectRoutes from './features/projects/project.routes.js'; 
+import { errorHandler } from './features/auth/auth.middleware.js'; // <-- This import is now correct
 
 dotenv.config();
 connectDB();
 
 const app = express();
-
-// Middleware to parse JSON
 app.use(express.json());
 
-// Example route
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+
 app.get('/', (req, res) => {
-  res.send('API is running...');
+  res.status(200).json({ success: true, message: 'API is running...' });
 });
 
-// Example API route
-app.get('/api/products', (req, res) => {
-  res.json([{ id: 1, name: 'Sample Product' }]);
-});
-
-// Catch-all for unknown routes
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route Not Found' });
-});
+// Use the global error handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

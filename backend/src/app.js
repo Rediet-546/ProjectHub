@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { connectDB } from './config/database.js';
-import authRoutes from './modules/auth/auth.routes.js';
+import authRoutes from './models/auth/auth.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();

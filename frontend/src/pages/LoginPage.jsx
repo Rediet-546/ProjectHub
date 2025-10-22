@@ -23,47 +23,69 @@ const LoginPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const isLoading = loginMutation.isPending || registerMutation.isPending;
+  const error = loginMutation.error?.response?.data?.message || registerMutation.error?.response?.data?.message;
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-lg w-full max-w-md">
-        <h3 className="text-2xl font-bold text-center text-gray-800">
-          {isLogin ? 'Login to ProjectHub' : 'Register for ProjectHub'}
-        </h3>
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <div className="mt-4">
-              <label className="block" htmlFor="name">Name</label>
-              <Input type="text" name="name" onChange={onChange} value={formData.name} required />
-            </div>
-          )}
-          <div className="mt-4">
-            <label className="block" htmlFor="email">Email</label>
-            <Input type="email" name="email" onChange={onChange} value={formData.email} required />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            {isLogin ? 'Sign in to your account' : 'Create your account'}
+          </h2>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <input type="hidden" name="remember" defaultValue="true" />
+          <div className="rounded-md shadow-sm -space-y-px">
+            {!isLogin && (
+              <Input
+                name="name"
+                type="text"
+                label="Full Name"
+                required
+                onChange={onChange}
+                value={formData.name}
+                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              />
+            )}
+            <Input
+              name="email"
+              type="email"
+              label="Email address"
+              required
+              onChange={onChange}
+              value={formData.email}
+              className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+            />
+            <Input
+              name="password"
+              type="password"
+              label="Password"
+              required
+              onChange={onChange}
+              value={formData.password}
+              className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+            />
           </div>
-          <div className="mt-4">
-            <label className="block" htmlFor="password">Password</label>
-            <Input type="password" name="password" onChange={onChange} value={formData.password} required />
-          </div>
-          <div className="flex items-baseline justify-between">
-            <Button type="submit" className="w-full mt-4">
-              {isLogin ? 'Login' : 'Register'}
+
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+          <div>
+            <Button type="submit" disabled={isLoading} className="group relative w-full">
+              {isLoading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
             </Button>
           </div>
-          { (loginMutation.isError || registerMutation.isError) && (
-            <p className="mt-2 text-red-500 text-center">
-              {loginMutation.error?.message || registerMutation.error?.message}
-            </p>
-          )}
+
+          <div className="text-center">
+            <button
+              type="button"
+              className="font-medium text-blue-600 hover:text-blue-500"
+              onClick={() => setIsLogin(!isLogin)}
+            >
+              {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+            </button>
+          </div>
         </form>
-        <div className="mt-6 text-grey-dark">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <a
-            className="text-blue-600 hover:underline cursor-pointer"
-            onClick={() => setIsLogin(!isLogin)}
-          >
-            {isLogin ? 'Register' : 'Login'}
-          </a>
-        </div>
       </div>
     </div>
   );

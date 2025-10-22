@@ -8,7 +8,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (credentials) =>
-      api.post('/auth/login', credentials).then((res) => res.data),
+      api.post('/auth/login', credentials).then((res) => res.data.data), // <-- FIX: Extract payload
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
       setAuth(data.token, data.user);
@@ -23,7 +23,7 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: (userData) =>
-      api.post('/auth/register', userData).then((res) => res.data),
+      api.post('/auth/register', userData).then((res) => res.data.data), // <-- FIX: Extract payload
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
       setAuth(data.token, data.user);
@@ -36,8 +36,8 @@ export const useAuthUser = () => {
   const token = useAuthStore((state) => state.token);
   return useQuery({
     queryKey: ['authUser'],
-    queryFn: () => api.get('/auth/me').then((res) => res.data),
+    queryFn: () => api.get('/auth/me').then((res) => res.data.data.user), // <-- FIX: Extract user payload
     enabled: !!token,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
